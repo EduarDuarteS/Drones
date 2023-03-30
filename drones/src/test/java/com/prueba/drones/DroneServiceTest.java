@@ -11,7 +11,6 @@ import com.prueba.drones.controller.dto.DroneRequestDto;
 import com.prueba.drones.enums.DroneError;
 import com.prueba.drones.enums.DroneState;
 import com.prueba.drones.exception.InvalidInputException;
-import com.prueba.drones.exception.InvalidSerialNumberException;
 import com.prueba.drones.model.Drone;
 import com.prueba.drones.service.DroneService;
 
@@ -38,11 +37,28 @@ class DroneServiceTest {
         Assertions.assertEquals(DroneState.IDLE, registeredDrone.getState());
     }
 
+    @Test
+    public void testRegisterDroneWitoutDroneState() {
+        DroneRequestDto droneRequest = new DroneRequestDto();
+        droneRequest.setSerialNumber("1234567890");
+        droneRequest.setModel("Lightweight");
+        droneRequest.setWeightLimit(500);
+        droneRequest.setBatteryCapacity(100);
+        Drone registeredDrone = droneService.registerDrone(droneRequest);
+
+        Assertions.assertEquals("1234567890", registeredDrone.getSerialNumber());
+        Assertions.assertEquals("Lightweight", registeredDrone.getModel());
+        Assertions.assertEquals(500, registeredDrone.getWeightLimit());
+        Assertions.assertEquals(100, registeredDrone.getBatteryCapacity());
+        Assertions.assertEquals(DroneState.IDLE, registeredDrone.getState());
+    }
+
+
 
     @Test
     public void testMessageRegisterDroneWithInvalidSerialNumber() {
         DroneRequestDto droneRequest = new DroneRequestDto();
-        droneRequest.setSerialNumber("1234567890123456789012345678901234567890123456789012345678901234567890");
+        droneRequest.setSerialNumber("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901");
         droneRequest.setModel("Lightweight");
         droneRequest.setWeightLimit(500);
         droneRequest.setBatteryCapacity(100);
@@ -57,24 +73,13 @@ class DroneServiceTest {
     }
 
 
-    @Test
-    public void testRegisterDroneWithInvalidSerialNumberException() {
-        String invalidSerialNumber = "serial1234567890123456789012345678901234567890123456789012345678901";
-
-        InvalidSerialNumberException exception = Assertions.assertThrows(InvalidSerialNumberException.class, () -> {
-            DroneRequestDto droneRequest = new DroneRequestDto(invalidSerialNumber, "Lightweight", 500, 100, DroneState.IDLE);
-            droneService.registerDrone(droneRequest);
-        });
-
-        Assertions.assertEquals(DroneError.INVALID_SERIAL_NUMBER.getMessage(), exception.getMessage());
-    }
 
     // serial number (100 characters max);
     @Test
     public void testRegisterDroneWithInvalidSerialNumber() {
         DroneRequestDto drone = new DroneRequestDto();
         // more than 100 characters
-        drone.setSerialNumber("1234567890123456789012345678901234567890123456789012345678901234567890");
+        drone.setSerialNumber("Serial12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901");
         drone.setModel("Lightweight");
         drone.setWeightLimit(500);
         drone.setBatteryCapacity(100);
@@ -97,7 +102,7 @@ class DroneServiceTest {
             droneService.registerDrone(drone);
         });
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
-        Assertions.assertEquals(DroneError.INVALID_DRONE_MODEL.getMessage(), exception.getMessage());
+        Assertions.assertEquals(DroneError.INVALID_DRONE_MODEL.getMessage(), exception.getErrorMessages().get(0));
     }
 
     @Test
