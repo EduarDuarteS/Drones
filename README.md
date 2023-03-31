@@ -42,3 +42,16 @@ The service uses a PostgreSQL database, which can be run locally using Docker. S
 
 2. BatteryService: This service would be responsible for managing the drone battery levels. It would have a method for checking the drone battery level for a given drone:
      - DroneBatteryResponseDto: DTO for checking the drone battery level for a given drone
+
+
+### REST API endpoints implemented:
+
+1. POST /api/drones - Registers a new drone. Payload should include drone serial number, model, weight limit, and battery capacity.
+
+2. PUT /api/drones/{drone_id}/load - Loads medication items onto the drone with the specified ID. Payload should include medication name, weight, and code.
+
+3. GET /api/drones/{drone_id}/medications - Retrieves a list of medication items loaded onto the drone with the specified ID.
+
+4. GET /api/drones/available - Retrieves a list of available drones that can be loaded with medication items.
+
+5. GET /api/drones/{drone_id}/battery - Retrieves the battery level of the drone with the specified ID.
