@@ -48,7 +48,7 @@ The service uses a PostgreSQL database, which can be run locally using Docker. S
 
 1. POST /api/drones - Registers a new drone. Payload should include drone serial number, model, weight limit, and battery capacity.
 
-2. PUT /api/drones/{drone_id}/load - Loads medication items onto the drone with the specified ID. Payload should include medication name, weight, and code.
+2. PUT /api/drones/{drone_id}/load PUT /api/drones/{drone_id}/load - Loads medication items onto the drone with the specified ID. Payload should include medication name, weight, and code.
 
 3. GET /api/drones/{drone_id}/medications - Retrieves a list of medication items loaded onto the drone with the specified ID.
 
