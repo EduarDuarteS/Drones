@@ -9,4 +9,5 @@ import com.prueba.drones.model.Drone;
 @Component
 public interface DroneRepository extends CrudRepository<Drone, String> {
 
+    
 }
