@@ -2,6 +2,8 @@ package com.prueba.drones.model;
 
 import jakarta.persistence.Entity;
 
+import java.util.List;
+
 import com.prueba.drones.enums.DroneState;
 
 import jakarta.persistence.*;
@@ -13,6 +15,7 @@ public class Drone {
     }
 
     @Id
+    @Column(name = "serial_number")
     private String serialNumber;
 
     @Column(name = "model")
@@ -27,6 +30,23 @@ public class Drone {
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
     private DroneState state;
+
+    @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL)
+    private List<DroneMedication> droneMedications;
+
+    public void addDroneMedication(DroneMedication droneMedication) {
+        droneMedications.add(droneMedication);
+        droneMedication.setDrone(this);
+    }
+
+    public void removeDroneMedication(DroneMedication droneMedication) {
+        droneMedications.remove(droneMedication);
+        droneMedication.setDrone(null);
+    }
+
+    public List<DroneMedication> getDroneMedications() {
+        return droneMedications;
+    }
 
     public Drone(String serialNumber, String model, double weightLimit, double batteryCapacity, DroneState state) {
         this.serialNumber = serialNumber;
@@ -82,6 +102,5 @@ public class Drone {
     public void setState(DroneState state) {
         this.state = state;
     }
-
 
 }
