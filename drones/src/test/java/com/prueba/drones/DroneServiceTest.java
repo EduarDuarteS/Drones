@@ -64,12 +64,11 @@ class DroneServiceTest {
         Assertions.assertEquals(DroneState.IDLE, registeredDrone.getState());
     }
 
-
-
     @Test
     public void testMessageRegisterDroneWithInvalidSerialNumber() {
         DroneRequestDto droneRequest = new DroneRequestDto();
-        droneRequest.setSerialNumber("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901");
+        droneRequest.setSerialNumber(
+                "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901");
         droneRequest.setModel("Lightweight");
         droneRequest.setWeightLimit(500);
         droneRequest.setBatteryCapacity(100);
@@ -83,14 +82,13 @@ class DroneServiceTest {
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
     }
 
-
-
     // serial number (100 characters max);
     @Test
     public void testRegisterDroneWithInvalidSerialNumber() {
         DroneRequestDto drone = new DroneRequestDto();
         // more than 100 characters
-        drone.setSerialNumber("Serial12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901");
+        drone.setSerialNumber(
+                "Serial12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901");
         drone.setModel("Lightweight");
         drone.setWeightLimit(500);
         drone.setBatteryCapacity(100);
@@ -129,7 +127,8 @@ class DroneServiceTest {
         });
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
         Assertions.assertEquals(1, exception.getErrorMessages().size());
-        Assertions.assertEquals(DroneError.EXCEEDED_DRONE_WEIGHT_LIMIT.getMessage(), exception.getErrorMessages().get(0));
+        Assertions.assertEquals(DroneError.EXCEEDED_DRONE_WEIGHT_LIMIT.getMessage(),
+                exception.getErrorMessages().get(0));
     }
 
     @Test
@@ -163,9 +162,6 @@ class DroneServiceTest {
         Assertions.assertEquals(1, exception.getErrorMessages().size());
         Assertions.assertEquals(DroneError.MISSING_DRONE_WEIGHT.getMessage(), exception.getErrorMessages().get(0));
     }
-
-
-
 
     @Test
     public void testRegisterDroneWithInvaliLessdWeightLimit() {

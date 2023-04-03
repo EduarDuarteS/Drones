@@ -228,6 +228,24 @@ public class DroneControllerTest_loadMedication {
 
     }
 
+    @Test
+    public void testPreventDroneInLoadingStateWithBatteryLevelBelow25Percent() {
+
+        // Drone with low batery
+        drone2.setBatteryCapacity(24);
+        droneService.registerDrone(new DroneRequestDto(drone2));
+        
+        List<MedicationDTO> medicationDTOs = Arrays.asList(medication1, medication2, medication3);
+
+        InvalidInputLoadDrone exception = Assertions.assertThrows(InvalidInputLoadDrone.class, () -> {
+            droneService.loadMedicines(serialD2L, medicationDTOs);
+        });
+
+        Assertions.assertEquals(DroneError.DRONE_BATTERY_LOW.getMessage(), exception.getErrorMessages().get(0));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+
+    }
+
     public static String getImageAsBase64(String imgName) throws IOException {
         String imagePath = MEDICATION_IMAGES_PATH + imgName + MEDICATION_IMAGE_EXTENSION;
         byte[] fileContent = Files.readAllBytes(Paths.get(imagePath));
