@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,6 +25,7 @@ import com.prueba.drones.controller.dto.dronRequestDTOs.DroneResponseDto;
 import com.prueba.drones.controller.dto.dronRequestDTOs.ErrorDto;
 import com.prueba.drones.controller.dto.dronRequestDTOs.ErrorResponseDto;
 import com.prueba.drones.controller.dto.medicineLoadDTOs.MedicationDTO;
+import com.prueba.drones.controller.dto.medicineLoadDTOs.MedicationResponseDTO;
 import com.prueba.drones.exception.InvalidInputException;
 import com.prueba.drones.exception.InvalidInputLoadDrone;
 
@@ -61,6 +63,12 @@ public class DroneController {
                 drone.getWeightLimit(), drone.getBatteryCapacity(), drone.getState());
         return new ResponseEntity<>(droneResponseDto, HttpStatus.CREATED);
     }
+
+    @GetMapping("/{droneId}/medicationItems")
+    public List<MedicationDTO> getLoadedMedicationItemsForDrone(@PathVariable("droneId") String droneId) {
+        return droneService.getLoadedMedicationItemsForDrone(droneId);
+    }
+    
 
     @RestControllerAdvice
     public class ExceptionHandlerController {

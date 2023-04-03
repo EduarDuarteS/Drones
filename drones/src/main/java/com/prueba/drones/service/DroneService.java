@@ -1,6 +1,7 @@
 package com.prueba.drones.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,6 +49,32 @@ public class DroneService {
     }
 
     @Transactional
+    public List<MedicationDTO> getLoadedMedicationItemsForDrone(String droneId) {
+        // Find the drone by ID
+        Optional<Drone> optionalDrone = droneRepository.findById(droneId);
+
+        if (optionalDrone.isPresent()) {
+            Drone drone = optionalDrone.get();
+
+            // If the drone is not in the LOADING state, return an empty list
+            if (drone.getState() != DroneState.LOADED) {
+                return Collections.emptyList();
+            }
+
+            List<Medication> medications = drone.getDroneMedications().get(0).getMedications();
+            List<MedicationDTO> medicationDTOs = medications.stream()
+                    .map(MedicationMapper::mapToDTO)
+                    .collect(Collectors.toList());
+
+            // If the drone is in the LOADING state, return its loaded medication items
+            return medicationDTOs;
+        } else {
+            throw new InvalidInputLoadDrone("Drone not found with id: " + droneId);
+        }
+
+    }
+
+    @Transactional
     public void loadMedicines(String droneId, List<MedicationDTO> medications) {
         Optional<Drone> optionalDrone = droneRepository.findById(droneId);
 
@@ -56,7 +83,9 @@ public class DroneService {
             drone.setState(DroneState.LOADED);
 
             List<String> errors = new ArrayList<>();
-            if (drone.getBatteryCapacity()<25){errors.add(DroneError.DRONE_BATTERY_LOW.getMessage());}
+            if (drone.getBatteryCapacity() < 25) {
+                errors.add(DroneError.DRONE_BATTERY_LOW.getMessage());
+            }
             List<MedicationDTO> validMedicines = new ArrayList<>();
             for (MedicationDTO medicine : medications) {
                 Errors validationErrors = new BeanPropertyBindingResult(medicine, "medicine");

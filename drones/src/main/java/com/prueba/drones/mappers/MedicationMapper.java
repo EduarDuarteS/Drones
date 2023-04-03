@@ -20,5 +20,18 @@ public class MedicationMapper {
         }
         return entity;
     }
+
+    public static MedicationDTO mapToDTO(Medication entity) {
+        MedicationDTO dto = new MedicationDTO();
+        dto.setName(entity.getName());
+        dto.setCode(entity.getCode());
+        dto.setWeight(entity.getWeight());
+        if(entity.getImage() != null) {
+            dto.setImage(Base64.getEncoder().encodeToString(entity.getImage()));
+        } else {
+            dto.setImage(null);
+        }
+        return dto;
+    }
     
 }
