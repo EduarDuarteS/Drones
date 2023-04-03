@@ -1,26 +1,34 @@
 package com.prueba.drones;
 
-import org.junit.jupiter.api.Assertions;
+import java.util.Optional;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 
-import com.prueba.drones.controller.dto.DroneRequestDto;
+import com.prueba.drones.controller.dto.dronRequestDTOs.DroneRequestDto;
 import com.prueba.drones.enums.DroneError;
 import com.prueba.drones.enums.DroneState;
 import com.prueba.drones.exception.InvalidInputException;
 import com.prueba.drones.model.Drone;
+import com.prueba.drones.repository.DroneRepository;
 import com.prueba.drones.service.DroneService;
 
 @SpringBootTest
+@DisplayName("Drone Service Test")
 class DroneServiceTest {
 
     @Autowired
     private DroneService droneService;
 
+    @Autowired
+    private DroneRepository droneRepository;
+
     @Test
+    @DisplayName("Register Drone successfully")
     public void testRegisterDrone() {
         DroneRequestDto droneRequest = new DroneRequestDto();
         droneRequest.setSerialNumber("1234567890");
@@ -29,6 +37,9 @@ class DroneServiceTest {
         droneRequest.setBatteryCapacity(100);
         droneRequest.setState(DroneState.IDLE);
         Drone registeredDrone = droneService.registerDrone(droneRequest);
+
+        Optional<Drone> recup = droneRepository.findById("1234567890");
+        recup.get().getModel();
 
         Assertions.assertEquals("1234567890", registeredDrone.getSerialNumber());
         Assertions.assertEquals("Lightweight", registeredDrone.getModel());
