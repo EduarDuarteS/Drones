@@ -2,7 +2,7 @@ package com.prueba.drones.validator;
 
 import java.util.List;
 
-import com.prueba.drones.controller.dto.DroneRequestDto;
+import com.prueba.drones.controller.dto.dronRequestDTOs.DroneRequestDto;
 import com.prueba.drones.enums.DroneError;
 import com.prueba.drones.enums.DroneModel;
 
