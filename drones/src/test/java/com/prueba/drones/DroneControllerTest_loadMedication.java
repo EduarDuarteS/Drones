@@ -191,16 +191,15 @@ public class DroneControllerTest_loadMedication {
 
     }
 
-
     @Test
     public void test_load_valid_medication_name() throws IOException {
 
         // Given a invalid name allowed only letters, numbers, ‘-‘, ‘_’
         List<MedicationDTO> medications = new ArrayList<>();
 
-        mediName2 = "Acet@min.";
+        medication2.setName("Acet@min.");
         medications.add(medication2);
-        
+
         InvalidInputLoadDrone exception = Assertions.assertThrows(InvalidInputLoadDrone.class, () -> {
             droneService.loadMedicines(serialD2L, medications);
         });

@@ -1,11 +1,15 @@
 package com.prueba.drones.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
+
 import com.prueba.drones.model.*;
 import com.prueba.drones.repository.DroneRepository;
 import com.prueba.drones.controller.dto.dronRequestDTOs.DroneRequestDto;
@@ -14,6 +18,7 @@ import com.prueba.drones.enums.DroneState;
 import com.prueba.drones.exception.InvalidInputException;
 import com.prueba.drones.exception.InvalidInputLoadDrone;
 import com.prueba.drones.mappers.MedicationMapper;
+import com.prueba.drones.validator.MedicationValidators;
 import com.prueba.drones.validator.RegisterDroneValidators;
 
 import jakarta.transaction.Transactional;
@@ -44,6 +49,22 @@ public class DroneService {
     @Transactional
     public void loadMedicines(String droneId, List<MedicationDTO> medications) {
         Optional<Drone> optionalDrone = droneRepository.findById(droneId);
+        
+        List<String> errors = new ArrayList<>();
+        List<MedicationDTO> validMedicines = new ArrayList<>();
+        for (MedicationDTO medicine : medications) {
+            Errors validationErrors = new BeanPropertyBindingResult(medicine, "medicine");
+            MedicationValidators.validate(medicine, validationErrors);
+
+            if (validationErrors.hasErrors()) {
+                errors.add(validationErrors.getAllErrors().get(0).getDefaultMessage());
+            } else {
+                validMedicines.add(medicine);
+            }
+        }
+        if (!errors.isEmpty()) {
+            throw new InvalidInputLoadDrone(errors);
+        }
 
         if (optionalDrone.isPresent()) {
             Drone drone = optionalDrone.get();

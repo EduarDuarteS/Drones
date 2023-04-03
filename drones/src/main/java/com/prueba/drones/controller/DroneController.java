@@ -25,6 +25,7 @@ import com.prueba.drones.controller.dto.dronRequestDTOs.ErrorDto;
 import com.prueba.drones.controller.dto.dronRequestDTOs.ErrorResponseDto;
 import com.prueba.drones.controller.dto.medicineLoadDTOs.MedicationDTO;
 import com.prueba.drones.exception.InvalidInputException;
+import com.prueba.drones.exception.InvalidInputLoadDrone;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class DroneController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DroneController.class);
-    
+
     private final DroneService droneService;
 
     public DroneController(DroneService droneService) {
@@ -44,10 +45,10 @@ public class DroneController {
     @PutMapping("/{droneId}/load")
     public ResponseEntity<Void> loadDrone(@PathVariable("droneId") String droneId,
             @RequestBody List<MedicationDTO> medications) {
-                LOGGER.info("Recibiendo peticion PUT");
+        LOGGER.info("Loading medications PUT");
 
-                LOGGER.debug("Loading medications for drone with ID: {}", droneId);
-         droneService.loadMedicines(droneId, medications);
+        LOGGER.debug("Loading medications for drone with ID: {}", droneId);
+        droneService.loadMedicines(droneId, medications);
         return ResponseEntity.ok().build();
     }
 
@@ -72,6 +73,15 @@ public class DroneController {
             }
             return new ErrorResponseDto(errors);
         }
-    }
 
+        @ExceptionHandler(InvalidInputLoadDrone.class)
+        @ResponseStatus(HttpStatus.BAD_REQUEST)
+        public ErrorResponseDto handleInvalidInputLoadDrone(InvalidInputLoadDrone ex) {
+            List<ErrorDto> errors = new ArrayList<>();
+            for (String errorMessage : ex.getErrorMessages()) {
+                errors.add(new ErrorDto(errorMessage, "INVALID_INPUT_LOAD_DRONE"));
+            }
+            return new ErrorResponseDto(errors);
+        }
+    }
 }
