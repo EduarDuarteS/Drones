@@ -8,16 +8,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.prueba.drones.model.Drone;
+import com.prueba.drones.enums.DroneError;
 import com.prueba.drones.enums.DroneState;
+import com.prueba.drones.exception.InvalidInputLoadDrone;
 import com.prueba.drones.model.Medication;
 import com.prueba.drones.service.DroneService;
 import com.prueba.drones.model.DroneMedication;
@@ -162,11 +165,8 @@ public class DroneControllerTest_loadMedication {
     public void testLoad3MedicationsToDrone() throws IOException {
 
         // Given
-        List<MedicationDTO> medications = new ArrayList<>();
-        medications.add(medication1);
-        medications.add(medication2);
-        medications.add(medication3);
-        droneService.loadMedicines(serialD2L, medications);
+        List<MedicationDTO> medicationDTOs = Arrays.asList(medication1, medication2, medication3);
+        droneService.loadMedicines(serialD2L, medicationDTOs);
 
         // When
         DroneMedication droneMedication = droneMedicationRepository.findByDroneSerialNumberWithMedications(serialD2L);
@@ -188,6 +188,25 @@ public class DroneControllerTest_loadMedication {
         assertEquals(m3Save.getWeight(), medWeigth3);
         assertEquals(m3Save.getCode(), medCode3);
         assertArrayEquals(m3Save.getImage(), img3Bytes);
+
+    }
+
+
+    @Test
+    public void test_load_valid_medication_name() throws IOException {
+
+        // Given a invalid name allowed only letters, numbers, ‘-‘, ‘_’
+        List<MedicationDTO> medications = new ArrayList<>();
+
+        mediName2 = "Acet@min.";
+        medications.add(medication2);
+        
+        InvalidInputLoadDrone exception = Assertions.assertThrows(InvalidInputLoadDrone.class, () -> {
+            droneService.loadMedicines(serialD2L, medications);
+        });
+
+        Assertions.assertEquals(DroneError.INVALID_MEDICATION_NAME.getMessage(), exception.getErrorMessages().get(0));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
 
     }
 
