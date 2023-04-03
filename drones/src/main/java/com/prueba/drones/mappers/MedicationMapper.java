@@ -13,7 +13,12 @@ public class MedicationMapper {
         entity.setName(dto.getName());
         entity.setCode(dto.getCode());
         entity.setWeight(dto.getWeight());
-        entity.setImage(Base64.getDecoder().decode(dto.getImage()));
+        if(dto.getImage() != null && !dto.getImage().isEmpty()) {
+            entity.setImage(Base64.getDecoder().decode(dto.getImage()));
+        } else {
+            entity.setImage(null);
+        }
         return entity;
     }
+    
 }
