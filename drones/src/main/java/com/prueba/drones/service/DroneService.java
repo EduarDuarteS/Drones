@@ -14,6 +14,7 @@ import org.springframework.validation.Errors;
 import com.prueba.drones.model.*;
 import com.prueba.drones.repository.DroneRepository;
 import com.prueba.drones.controller.dto.dronRequestDTOs.DroneRequestDto;
+import com.prueba.drones.controller.dto.dronRequestDTOs.DroneResponseDto;
 import com.prueba.drones.controller.dto.medicineLoadDTOs.MedicationDTO;
 import com.prueba.drones.enums.DroneError;
 import com.prueba.drones.enums.DroneState;
@@ -47,6 +48,16 @@ public class DroneService {
                 droneRequestDto.getBatteryCapacity(), state);
         return this.droneRepository.save(drone);
     }
+
+    public List<DroneResponseDto> getAvailableDronesForLoading() {
+        List<Drone> drones = droneRepository.findAllByState(DroneState.IDLE);
+    
+        return drones.stream()
+                .map(drone -> new DroneResponseDto(drone.getSerialNumber(), drone.getModel(), drone.getWeightLimit(),
+                        drone.getBatteryCapacity(), drone.getState()))
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public List<MedicationDTO> getLoadedMedicationItemsForDrone(String droneId) {

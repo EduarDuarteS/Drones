@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 
+import com.prueba.drones.enums.DroneState;
 import com.prueba.drones.model.Drone;
 
 @Component
@@ -16,4 +17,6 @@ public interface DroneRepository extends CrudRepository<Drone, String> {
 
     @Query("SELECT d FROM Drone d WHERE d.model = ?1")
     List<Drone> findByModel(String model);
+
+    List<Drone> findAllByState(DroneState state);
 }

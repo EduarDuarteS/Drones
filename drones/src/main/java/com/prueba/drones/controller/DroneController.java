@@ -25,7 +25,6 @@ import com.prueba.drones.controller.dto.dronRequestDTOs.DroneResponseDto;
 import com.prueba.drones.controller.dto.dronRequestDTOs.ErrorDto;
 import com.prueba.drones.controller.dto.dronRequestDTOs.ErrorResponseDto;
 import com.prueba.drones.controller.dto.medicineLoadDTOs.MedicationDTO;
-import com.prueba.drones.controller.dto.medicineLoadDTOs.MedicationResponseDTO;
 import com.prueba.drones.exception.InvalidInputException;
 import com.prueba.drones.exception.InvalidInputLoadDrone;
 
@@ -68,6 +67,13 @@ public class DroneController {
     public List<MedicationDTO> getLoadedMedicationItemsForDrone(@PathVariable("droneId") String droneId) {
         return droneService.getLoadedMedicationItemsForDrone(droneId);
     }
+
+    @GetMapping("/availableForLoading")
+    public ResponseEntity<List<DroneResponseDto>> getAvailableDronesForLoading() {
+        List<DroneResponseDto> drones = droneService.getAvailableDronesForLoading();
+        return ResponseEntity.ok(drones);
+    }
+    
     
 
     @RestControllerAdvice
