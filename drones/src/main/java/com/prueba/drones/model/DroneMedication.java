@@ -15,7 +15,7 @@ public class DroneMedication {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "drone_id", referencedColumnName = "serial_number")
+    @JoinColumn(name = "drone_serial_number", referencedColumnName = "serial_number")
     private Drone drone;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

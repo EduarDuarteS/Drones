@@ -11,14 +11,14 @@ public class DroneRequestDto {
 
     private double weightLimit;
 
-    private double batteryCapacity;
+    private int batteryCapacity;
 
     private DroneState state;
 
     public DroneRequestDto() {
     }
 
-    public DroneRequestDto(String serialNumber, String model, double weightLimit, double batteryCapacity,
+    public DroneRequestDto(String serialNumber, String model, double weightLimit, int batteryCapacity,
             DroneState state) {
         this.serialNumber = serialNumber;
         this.model = model;
@@ -59,11 +59,11 @@ public class DroneRequestDto {
         this.weightLimit = weightLimit;
     }
 
-    public double getBatteryCapacity() {
+    public int getBatteryCapacity() {
         return batteryCapacity;
     }
 
-    public void setBatteryCapacity(double batteryCapacity) {
+    public void setBatteryCapacity(int batteryCapacity) {
         this.batteryCapacity = batteryCapacity;
     }
 

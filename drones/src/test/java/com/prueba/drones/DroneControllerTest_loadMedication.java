@@ -61,14 +61,14 @@ public class DroneControllerTest_loadMedication {
     // Data Drone 1
     final private String serialD1L = "DroneTest1";
     final private String modelD1 = "Heavyweight";
-    final private int weightL1 = 500;
+    final private double weightL1 = 500;
     final private int bateryC1 = 100;
     final private DroneState droneState1 = DroneState.IDLE;
 
     // Data Dron 2
     private String serialD2L = "DroneTest2";
     private String modelD2 = "Lightweight";
-    private int weightL2 = 300;
+    private double weightL2 = 300;
     private int bateryC2 = 100;
     private DroneState droneState2 = DroneState.IDLE;
 

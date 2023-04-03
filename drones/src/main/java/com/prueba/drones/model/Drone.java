@@ -2,6 +2,7 @@ package com.prueba.drones.model;
 
 import jakarta.persistence.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.prueba.drones.enums.DroneState;
@@ -12,7 +13,30 @@ import jakarta.persistence.*;
 public class Drone {
 
     public Drone() {
+        this.droneBatteryHistories = new ArrayList<>();
+        this.droneMedications = new ArrayList<>();
     }
+
+    public Drone(String serialNumber, String model, double weightLimit, int batteryCapacity, DroneState state) {
+        this.serialNumber = serialNumber;
+        this.model = model;
+        this.weightLimit = weightLimit;
+        this.batteryCapacity = batteryCapacity;
+        this.state = state;
+        this.droneBatteryHistories = new ArrayList<>();
+        this.droneMedications = new ArrayList<>();
+    }
+
+    public Drone(String serialNumber, String model, double weightLimit, int batteryCapacity) {
+        this.serialNumber = serialNumber;
+        this.model = model;
+        this.weightLimit = weightLimit;
+        this.batteryCapacity = batteryCapacity;
+        this.droneBatteryHistories = new ArrayList<>();
+        this.droneMedications = new ArrayList<>();
+    }
+
+
 
     @Id
     @Column(name = "serial_number")
@@ -28,7 +52,7 @@ public class Drone {
     private double weightLoaded;
 
     @Column(name = "battery_capacity")
-    private double batteryCapacity;
+    private int batteryCapacity;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
@@ -37,33 +61,31 @@ public class Drone {
     @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL)
     private List<DroneMedication> droneMedications;
 
+    @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL)
+    private List<DroneBatteryHistory> droneBatteryHistories;
+
+    public void addDroneBatteryHistory(DroneBatteryHistory droneBatteryHistory) {
+        droneBatteryHistories.add(droneBatteryHistory);
+    }
+
+    public void removeDroneBatteryHistory(DroneBatteryHistory droneBatteryHistory) {
+        droneBatteryHistories.remove(droneBatteryHistory);
+    }
+
+    public List<DroneBatteryHistory> getDroneBatteryHistories() {
+        return droneBatteryHistories;
+    }
+
     public void addDroneMedication(DroneMedication droneMedication) {
         droneMedications.add(droneMedication);
-        droneMedication.setDrone(this);
     }
 
     public void removeDroneMedication(DroneMedication droneMedication) {
         droneMedications.remove(droneMedication);
-        droneMedication.setDrone(null);
     }
 
     public List<DroneMedication> getDroneMedications() {
         return droneMedications;
-    }
-
-    public Drone(String serialNumber, String model, double weightLimit, double batteryCapacity, DroneState state) {
-        this.serialNumber = serialNumber;
-        this.model = model;
-        this.weightLimit = weightLimit;
-        this.batteryCapacity = batteryCapacity;
-        this.state = state;
-    }
-
-    public Drone(String serialNumber, String model, double weightLimit, double batteryCapacity) {
-        this.serialNumber = serialNumber;
-        this.model = model;
-        this.weightLimit = weightLimit;
-        this.batteryCapacity = batteryCapacity;
     }
 
     public String getSerialNumber() {
@@ -86,7 +108,7 @@ public class Drone {
         return weightLimit;
     }
 
-    public void setWeightLimit(int weightLimit) {
+    public void setWeightLimit(Double weightLimit) {
         this.weightLimit = weightLimit;
     }
 
@@ -98,7 +120,7 @@ public class Drone {
         this.weightLoaded = weightLoaded;
     }
 
-    public double getBatteryCapacity() {
+    public int getBatteryCapacity() {
         return batteryCapacity;
     }
 
