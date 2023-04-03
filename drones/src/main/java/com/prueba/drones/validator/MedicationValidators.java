@@ -16,7 +16,6 @@ public class MedicationValidators {
 
     private static final Pattern NAME_PATTERN = Pattern.compile("[A-Za-z0-9-_]+");
     private static final Pattern CODE_PATTERN = Pattern.compile("[A-Z0-9_]+");
-    private static final Pattern MEDICATION_CODE_PATTERN = Pattern.compile("^[a-zA-Z0-9]+$");
 
     public static void validate(Object target, Errors errors) {
         ValidationUtils.rejectIfEmpty(errors, "name", "name.empty");
@@ -46,14 +45,12 @@ public class MedicationValidators {
             errors.add("3:" + DroneError.MISSING_MEDICATION_CODE.getMessage());
         } else if (!CODE_PATTERN.matcher(medication.getCode()).matches()) {
             errors.add("4:" + DroneError.INVALID_MEDICATION_CODE.getMessage());
-        } else if (!MEDICATION_CODE_PATTERN.matcher(medication.getCode()).matches()) {
-            errors.add("5:" + DroneError.INVALID_MEDICATION_CODE.getMessage());
-        }
+        } 
 
         if (medication.getWeight() == null) {
-            errors.add("6:" + DroneError.MISSING_MEDICATION_WEIGHT.getMessage());
+            errors.add("5:" + DroneError.MISSING_MEDICATION_WEIGHT.getMessage());
         } else if (medication.getWeight() <= 0) {
-            errors.add("7:" + DroneError.INVALID_MEDICATION_WEIGHT.getMessage());
+            errors.add("6:" + DroneError.INVALID_MEDICATION_WEIGHT.getMessage());
         }
 
         return errors;

@@ -75,15 +75,15 @@ public class DroneControllerTest_loadMedication {
     // Data Medicines
     private String mediName1 = "acetaminofen";
     private Double medWeigth1 = 100.0;
-    private String medCode1 = "medi_1";
+    private String medCode1 = "MEDI_1";
 
     private String mediName2 = "Buscapina";
     private Double medWeigth2 = 50.0;
-    private String medCode2 = "medi_2";
+    private String medCode2 = "MEDI_2";
 
     private String mediName3 = "clonazepam";
     private Double medWeigth3 = 150.0;
-    private String medCode3 = "medi_3";
+    private String medCode3 = "MEDI_3";
 
     @BeforeEach
     public void setUp() throws IOException {
