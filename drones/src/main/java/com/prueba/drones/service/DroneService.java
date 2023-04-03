@@ -14,6 +14,7 @@ import com.prueba.drones.model.*;
 import com.prueba.drones.repository.DroneRepository;
 import com.prueba.drones.controller.dto.dronRequestDTOs.DroneRequestDto;
 import com.prueba.drones.controller.dto.medicineLoadDTOs.MedicationDTO;
+import com.prueba.drones.enums.DroneError;
 import com.prueba.drones.enums.DroneState;
 import com.prueba.drones.exception.InvalidInputException;
 import com.prueba.drones.exception.InvalidInputLoadDrone;
@@ -52,11 +53,10 @@ public class DroneService {
 
         if (optionalDrone.isPresent()) {
             Drone drone = optionalDrone.get();
-
-            // Set drone state to LOADED
             drone.setState(DroneState.LOADED);
 
             List<String> errors = new ArrayList<>();
+            if (drone.getBatteryCapacity()<25){errors.add(DroneError.DRONE_BATTERY_LOW.getMessage());}
             List<MedicationDTO> validMedicines = new ArrayList<>();
             for (MedicationDTO medicine : medications) {
                 Errors validationErrors = new BeanPropertyBindingResult(medicine, "medicine");
