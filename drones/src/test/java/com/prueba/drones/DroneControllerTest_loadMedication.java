@@ -195,16 +195,35 @@ public class DroneControllerTest_loadMedication {
     public void test_load_valid_medication_name() throws IOException {
 
         // Given a invalid name allowed only letters, numbers, ‘-‘, ‘_’
-        List<MedicationDTO> medications = new ArrayList<>();
+        List<MedicationDTO> medicationDTOs = new ArrayList<>();
 
         medication2.setName("Acet@min.");
-        medications.add(medication2);
+        medicationDTOs.add(medication2);
 
         InvalidInputLoadDrone exception = Assertions.assertThrows(InvalidInputLoadDrone.class, () -> {
-            droneService.loadMedicines(serialD2L, medications);
+            droneService.loadMedicines(serialD2L, medicationDTOs);
         });
 
         Assertions.assertEquals(DroneError.INVALID_MEDICATION_NAME.getMessage(), exception.getErrorMessages().get(0));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+
+    }
+
+    @Test
+    public void testLoadDroneWithExcessiveWeight() {
+
+        // Given a weight limit 300 set 400 weigth medicines
+
+        medication2.setWeight(200.0);
+        medication3.setWeight(200.0);
+
+        List<MedicationDTO> medicationDTOs = Arrays.asList(medication1, medication2, medication3);
+
+        InvalidInputLoadDrone exception = Assertions.assertThrows(InvalidInputLoadDrone.class, () -> {
+            droneService.loadMedicines(serialD2L, medicationDTOs);
+        });
+
+        Assertions.assertEquals(DroneError.EXCEEDED_DRONE_WEIGHT_LIMIT.getMessage(), exception.getErrorMessages().get(0));
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
 
     }
