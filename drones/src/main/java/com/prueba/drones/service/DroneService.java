@@ -49,22 +49,6 @@ public class DroneService {
     @Transactional
     public void loadMedicines(String droneId, List<MedicationDTO> medications) {
         Optional<Drone> optionalDrone = droneRepository.findById(droneId);
-        
-        List<String> errors = new ArrayList<>();
-        List<MedicationDTO> validMedicines = new ArrayList<>();
-        for (MedicationDTO medicine : medications) {
-            Errors validationErrors = new BeanPropertyBindingResult(medicine, "medicine");
-            MedicationValidators.validate(medicine, validationErrors);
-
-            if (validationErrors.hasErrors()) {
-                errors.add(validationErrors.getAllErrors().get(0).getDefaultMessage());
-            } else {
-                validMedicines.add(medicine);
-            }
-        }
-        if (!errors.isEmpty()) {
-            throw new InvalidInputLoadDrone(errors);
-        }
 
         if (optionalDrone.isPresent()) {
             Drone drone = optionalDrone.get();
@@ -72,22 +56,32 @@ public class DroneService {
             // Set drone state to LOADED
             drone.setState(DroneState.LOADED);
 
+            List<String> errors = new ArrayList<>();
+            List<MedicationDTO> validMedicines = new ArrayList<>();
+            for (MedicationDTO medicine : medications) {
+                Errors validationErrors = new BeanPropertyBindingResult(medicine, "medicine");
+                MedicationValidators.validate(medicine, validationErrors, drone);
+
+                if (validationErrors.hasErrors()) {
+                    errors.add(validationErrors.getAllErrors().get(0).getDefaultMessage());
+                } else {
+                    validMedicines.add(medicine);
+                }
+            }
+            if (!errors.isEmpty()) {
+                throw new InvalidInputLoadDrone(errors);
+            }
+
             List<Medication> validMedications = medications.stream()
                     .map(MedicationMapper::mapToEntity)
                     .collect(Collectors.toList());
 
-            double totalWeight = validMedications.stream().mapToDouble(Medication::getWeight).sum();
-            if (totalWeight > drone.getWeightLimit()) {
-                throw new InvalidInputException("Total weight of medications exceeds drone's weight limit");
-            }
-
-            DroneMedication droneMedication = new DroneMedication(drone, validMedications, 2);
+            DroneMedication droneMedication = new DroneMedication(drone, validMedications, 1);
 
             // Set drone medications to the newly loaded medications
             drone.addDroneMedication(droneMedication);
 
             droneRepository.save(drone);
-            // droneMedicationRepository.save(droneMedication);
             LOGGER.info("Drone medication saved with medications: {}", droneMedication);
 
         } else {

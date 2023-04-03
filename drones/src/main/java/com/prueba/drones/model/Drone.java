@@ -24,6 +24,9 @@ public class Drone {
     @Column(name = "weight_limit")
     private double weightLimit;
 
+    @Column(name = "weight_loaded")
+    private double weightLoaded;
+
     @Column(name = "battery_capacity")
     private double batteryCapacity;
 
@@ -85,6 +88,14 @@ public class Drone {
 
     public void setWeightLimit(int weightLimit) {
         this.weightLimit = weightLimit;
+    }
+
+    public double getWeightLoaded() {
+        return weightLoaded;
+    }
+
+    public void setWeightLoaded(double weightLoaded) {
+        this.weightLoaded = weightLoaded;
     }
 
     public double getBatteryCapacity() {
