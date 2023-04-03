@@ -12,7 +12,9 @@ import com.prueba.drones.model.Drone;
 import com.prueba.drones.service.DroneService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,7 @@ import com.prueba.drones.controller.dto.dronRequestDTOs.DroneResponseDto;
 import com.prueba.drones.controller.dto.dronRequestDTOs.ErrorDto;
 import com.prueba.drones.controller.dto.dronRequestDTOs.ErrorResponseDto;
 import com.prueba.drones.controller.dto.medicineLoadDTOs.MedicationDTO;
+import com.prueba.drones.exception.DroneNotFoundException;
 import com.prueba.drones.exception.InvalidInputException;
 import com.prueba.drones.exception.InvalidInputLoadDrone;
 
@@ -72,6 +75,20 @@ public class DroneController {
     public ResponseEntity<List<DroneResponseDto>> getAvailableDronesForLoading() {
         List<DroneResponseDto> drones = droneService.getAvailableDronesForLoading();
         return ResponseEntity.ok(drones);
+    }
+
+    @GetMapping("/{serialNumber}/battery")
+    public ResponseEntity<Map<String, Object>> checkDroneBatteryLevel(@PathVariable String serialNumber) {
+        try {
+            int batteryLevel = droneService.getBatteryLevel(serialNumber);
+            Map<String, Object> response = new HashMap<>();
+            response.put("Serial", serialNumber);
+            response.put("battery", batteryLevel);
+            response.put("message", "Drone battery level: " + batteryLevel + "%");
+            return ResponseEntity.ok(response);
+        } catch (DroneNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
     
     

@@ -1,23 +1,22 @@
-
 package com.prueba.drones.exception;
 
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 
-public class InvalidInputException extends RuntimeException {
+public class DroneNotFoundException extends RuntimeException {
     private List<String> errorMessages;
 
-    public InvalidInputException() {
+    public DroneNotFoundException() {
         super();
     }
 
-    public InvalidInputException(String message) {
+    public DroneNotFoundException(String message) {
         super(message);
     }
 
-    public InvalidInputException(List<String> errorMessages) {
-        super("Invalid input");
+    public DroneNotFoundException(List<String> errorMessages) {
+        super("Drone Not Found");
         this.errorMessages = errorMessages;
     }
 
@@ -26,6 +25,6 @@ public class InvalidInputException extends RuntimeException {
     }
 
     public HttpStatus getStatus() {
-        return HttpStatus.BAD_REQUEST;
+        return HttpStatus.NOT_FOUND;
     }
 }

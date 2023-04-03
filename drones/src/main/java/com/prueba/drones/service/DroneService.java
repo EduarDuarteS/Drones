@@ -18,6 +18,7 @@ import com.prueba.drones.controller.dto.dronRequestDTOs.DroneResponseDto;
 import com.prueba.drones.controller.dto.medicineLoadDTOs.MedicationDTO;
 import com.prueba.drones.enums.DroneError;
 import com.prueba.drones.enums.DroneState;
+import com.prueba.drones.exception.DroneNotFoundException;
 import com.prueba.drones.exception.InvalidInputException;
 import com.prueba.drones.exception.InvalidInputLoadDrone;
 import com.prueba.drones.mappers.MedicationMapper;
@@ -51,13 +52,25 @@ public class DroneService {
 
     public List<DroneResponseDto> getAvailableDronesForLoading() {
         List<Drone> drones = droneRepository.findAllByState(DroneState.IDLE);
-    
+
         return drones.stream()
                 .map(drone -> new DroneResponseDto(drone.getSerialNumber(), drone.getModel(), drone.getWeightLimit(),
                         drone.getBatteryCapacity(), drone.getState()))
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public int getBatteryLevel(String droneId) {
+        // Find the drone by ID
+        Optional<Drone> optionalDrone = droneRepository.findById(droneId);
+
+        if (optionalDrone.isPresent()) {
+            Drone drone = optionalDrone.get();
+            return drone.getBatteryCapacity();
+        } else {
+            throw new DroneNotFoundException("Drone not found with id: " + droneId);
+        }
+    }
 
     @Transactional
     public List<MedicationDTO> getLoadedMedicationItemsForDrone(String droneId) {
