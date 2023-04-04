@@ -19,17 +19,53 @@ This project is a REST API service developed using Java Spring Framework and Jav
 - JUnit tests are optional but advisable (if you have time).
 - Commit history should be clear and well-documented.
 
-### Installation
 
-To install the service, follow these steps:
+### Build Instructions
 
-1. Clone the repository to your local machine.
-2. Build the project using ./gradlew build.
-3. Run the service using ./gradlew bootRun.
+1. Clone the repository.
+2. Ensure you have JDK 17 and Gradle 7.6.1 installed on your machine.
+3. Open a terminal in the project root directory.
+4. Run the command **gradle build** to build the project.
+
+
+### Run Instructions
+
+1. Ensure you have JDK 17 and Gradle 7.6.1 installed on your machine.
+2. Open a terminal in the project root directory.
+3. Run the command `gradle bootRun` to start the application.
+
+
+### Test Instructions
+
+1. Ensure you have JDK 17 and Gradle 7.6.1 installed on your machine.
+2. Open a terminal in the project root directory.
+3. Run the command `gradle test` to run the unit tests.
+
 
 ### Database
 
-The service uses a PostgreSQL database, which can be run locally using Docker. See the docker-compose.yml file for an example configuration.
+The application uses an H2 in-memory database for development and a PostgreSQL database for production. To change the database, modify the `application-prod.properties` file with the appropriate database details.
+
+To switch between development and production environments, change the `spring.profiles.active=dev` parameter in the `application.properties` file.
+
+### Dependencies
+
+    - jakarta.persistence:jakarta.persistence-api:3.1.0
+    - org.postgresql:postgresql:42.3.1
+    - commons-codec:commons-codec:1.15
+    - javax.validation:validation-api:2.0.1.Final
+    - org.springframework.boot:spring-boot-starter-data-jpa
+    - org.springframework.boot:spring-boot-starter-web
+    - org.projectlombok:lombok
+    - com.h2database:h2
+    - org.projectlombok:lombok
+    - org.springframework.boot:spring-boot-starter-test
+
+
+
+
+
+
 
 ### Services
 
