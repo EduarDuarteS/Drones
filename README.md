@@ -86,8 +86,8 @@ To switch between development and production environments, change the `spring.pr
 
 2. PUT /api/drones/{drone_id}/load PUT /api/drones/{drone_id}/load - Loads medication items onto the drone with the specified ID. Payload should include medication name, weight, and code.
 
-3. GET /api/drones/{drone_id}/medications - Retrieves a list of medication items loaded onto the drone with the specified ID.
+3. GET /api/drones/{drone_id}/medicationItems - Retrieves a list of medication items loaded onto the drone with the specified ID.
 
-4. GET /api/drones/available - Retrieves a list of available drones that can be loaded with medication items.
+4. GET /api/drones/availableForLoading - Retrieves a list of available drones that can be loaded with medication items.
 
 5. GET /api/drones/{drone_id}/battery - Retrieves the battery level of the drone with the specified ID.
