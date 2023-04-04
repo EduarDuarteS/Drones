@@ -53,10 +53,15 @@ public class DroneService {
     public List<DroneResponseDto> getAvailableDronesForLoading() {
         List<Drone> drones = droneRepository.findAllByState(DroneState.IDLE);
 
-        return drones.stream()
-                .map(drone -> new DroneResponseDto(drone.getSerialNumber(), drone.getModel(), drone.getWeightLimit(),
-                        drone.getBatteryCapacity(), drone.getState()))
-                .collect(Collectors.toList());
+        if (!drones.isEmpty()) {
+            return drones.stream()
+                    .map(drone -> new DroneResponseDto(drone.getSerialNumber(), drone.getModel(),
+                            drone.getWeightLimit(),
+                            drone.getBatteryCapacity(), drone.getState()))
+                    .collect(Collectors.toList());
+        } else {
+            throw new DroneNotFoundException("Not Available Drones");
+        }
     }
 
     @Transactional
@@ -93,7 +98,7 @@ public class DroneService {
             // If the drone is in the LOADING state, return its loaded medication items
             return medicationDTOs;
         } else {
-            throw new InvalidInputLoadDrone("Drone not found with id: " + droneId);
+            throw new DroneNotFoundException("Drone not found with id: " + droneId);
         }
 
     }

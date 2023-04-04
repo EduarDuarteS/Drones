@@ -67,14 +67,25 @@ public class DroneController {
     }
 
     @GetMapping("/{droneId}/medicationItems")
-    public List<MedicationDTO> getLoadedMedicationItemsForDrone(@PathVariable("droneId") String droneId) {
-        return droneService.getLoadedMedicationItemsForDrone(droneId);
+    public ResponseEntity<List<MedicationDTO>> getLoadedMedicationItemsForDrone(
+            @PathVariable("droneId") String droneId) {
+        try {
+            List<MedicationDTO> medicationItems = droneService.getLoadedMedicationItemsForDrone(droneId);
+            return ResponseEntity.ok(medicationItems);
+        } catch (DroneNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/availableForLoading")
     public ResponseEntity<List<DroneResponseDto>> getAvailableDronesForLoading() {
-        List<DroneResponseDto> drones = droneService.getAvailableDronesForLoading();
-        return ResponseEntity.ok(drones);
+        try {
+            List<DroneResponseDto> drones = droneService.getAvailableDronesForLoading();
+            return ResponseEntity.ok(drones);
+        } catch (DroneNotFoundException e) {
+            return ResponseEntity.notFound().build();
+
+        }
     }
 
     @GetMapping("/{serialNumber}/battery")
@@ -90,8 +101,6 @@ public class DroneController {
             return ResponseEntity.notFound().build();
         }
     }
-    
-    
 
     @RestControllerAdvice
     public class ExceptionHandlerController {
