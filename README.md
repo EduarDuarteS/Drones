@@ -40,6 +40,9 @@ This project is a REST API service developed using Java Spring Framework and Jav
 1. Ensure you have JDK 17 and Gradle 7.6.1 installed on your machine.
 2. Open a terminal in the project root directory.
 3. Run the command `gradle test` to run the unit tests.
+4. open `build/reports/tests/test/index.html`
+
+https://raw.githubusercontent.com/EduarDuarteS/Drones/main/testResult.html
 
 
 ### Database
