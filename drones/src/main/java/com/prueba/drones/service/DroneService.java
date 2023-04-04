@@ -104,7 +104,8 @@ public class DroneService {
 
         if (optionalDrone.isPresent()) {
             Drone drone = optionalDrone.get();
-            drone.setState(DroneState.LOADED);
+            drone.setState(DroneState.LOADING);
+            drone.setWeightLoaded(0);
 
             List<String> errors = new ArrayList<>();
             if (drone.getBatteryCapacity() < 25) {
@@ -133,6 +134,7 @@ public class DroneService {
 
             // Set drone medications to the newly loaded medications
             drone.addDroneMedication(droneMedication);
+            drone.setState(DroneState.LOADED);
 
             droneRepository.save(drone);
             LOGGER.info("Drone medication saved with medications: {}", droneMedication);
